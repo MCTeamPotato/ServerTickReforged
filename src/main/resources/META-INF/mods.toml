@@ -1,0 +1,14 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+license = "MIT"
+
+[[mods]]
+modId = "servertick"
+version = "${version}"
+logoFile="assets/servertick/icon.png"
+credits="Samuel Čavoj (original author)"
+displayName = "ServerTick"
+authors="TeamPotato"
+description = '''
+
+'''
