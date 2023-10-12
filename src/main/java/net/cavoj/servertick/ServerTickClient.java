@@ -2,7 +2,7 @@ package net.cavoj.servertick;
 
 import io.netty.buffer.ByteBuf;
 import net.cavoj.servertick.extensions.SerializableMetricsData;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.networking.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.util.MetricsData;
 
 public class ServerTickClient {

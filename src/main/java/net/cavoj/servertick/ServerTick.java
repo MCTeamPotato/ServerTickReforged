@@ -1,14 +1,16 @@
 package net.cavoj.servertick;
 
 import net.cavoj.servertick.extensions.MinecraftServerWithST;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.networking.api.networking.v1.PacketSender;
+import net.fabricmc.networking.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLLoader;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +22,13 @@ public class ServerTick {
     public ServerTick() {
         if (FMLLoader.getDist().isClient()) ServerTickClient.getInstance().clientInit();
         ServerPlayNetworking.registerGlobalReceiver(NetworkC2S.PACKET_ENABLED, this::processTogglePacket);
-        ServerTickEvents.END_SERVER_TICK.register((minecraftServer -> ((MinecraftServerWithST)minecraftServer).st$tick()));
+        MinecraftForge.EVENT_BUS.register(this);
         if (FMLLoader.getDist().isDedicatedServer()) this.config = new Config(FMLLoader.getGamePath().resolve("config").resolve("servertick.toml"));
+    }
+
+    @SubscribeEvent
+    public void onServerTickEnd(TickEvent.ServerTickEvent event) {
+        if (event.phase.equals(TickEvent.Phase.END)) ((MinecraftServerWithST)event.getServer()).st$tick();;
     }
 
     private boolean checkPlayerPrivilege(@NotNull PlayerEntity player) {
